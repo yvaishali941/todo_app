@@ -1,0 +1,68 @@
+{% extends "main.html" %}
+
+{% block title %}
+<title> todo app</title>
+{% endblock title %}
+
+{% block body %}
+<h1 class="text-center">My TODO APP</h1>
+<h4 class="my-4">Add a Todo</h4>
+<form method="POST" action="/">
+  <div class="mb-3 my-2">
+    <label for="exampleInputEmail1" class="form-label">todo title</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="title" name="title">
+    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">todo description</label>
+    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="description" name="desc">
+  </div>
+  <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+<h4 class="my-4">Your Todos</h4>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+      <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+  <strong>Message: </strong> {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+{% if allTodo|length==0 %}
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
+ No Todo Found, Add your 1st Todo
+</div>
+{% else %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">S.no</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Date & Time</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for todo in allTodo %}
+    <tr>
+      <th scope="row">{{loop.index}}</th>
+      <td>{{todo.title}}</td>
+      <td>{{todo.desc}}</td>
+      <td>{{todo.date}}</td>
+      <td>
+        <a class="btn btn-success", href="/todo_update/{{todo.id}}">Update</a>
+        <a class="btn btn-danger mx-1", href="/todo_delete/{{todo.id}}">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock body %}
